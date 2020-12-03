@@ -1,0 +1,24 @@
+{
+  "name": "psprokofiev/laravel-repository",
+  "description": "Laravel Repository Pattern",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Prokofiev Pavel",
+      "email": "ps.prokofiev@gmail.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Psprokofiev\\LaravelRepository\\": "src/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Psprokofiev\\LaravelRepository\\Providers\\LaravelRepositoryProvider"
+      ]
+    }
+  }
+}

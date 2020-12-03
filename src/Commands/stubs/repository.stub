@@ -1,0 +1,18 @@
+<?php
+
+namespace {{ namespace }};
+
+use App\Models\{{ model }};
+use Psprokofiev\LaravelRepository\LaravelRepository;
+
+/**
+ * Class {{ class }}
+ * @package App\Repositories\{{ class }}
+ */
+class {{ class }} extends LaravelRepository
+{
+    /** @var string */
+    protected $model = {{ model }}::class;
+
+    //
+}
