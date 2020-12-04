@@ -35,7 +35,7 @@ abstract class LaravelRepository
             throw new InvalidModel();
         }
 
-        $this->query = app($this->model)->newQuery();
+        $this->query = app($this->model);
     }
 
     /**
@@ -43,6 +43,6 @@ abstract class LaravelRepository
      */
     public function getTable()
     {
-        return app($this->model)->getTable();
+        return $this->query->getTable();
     }
 }
