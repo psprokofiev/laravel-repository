@@ -20,5 +20,11 @@
         "Psprokofiev\\LaravelRepository\\Providers\\LaravelRepositoryProvider"
       ]
     }
-  }
+  },
+  "require": {
+    "php": "^7.4|^8.0",
+    "laravel/framework": "^7.0|^8.0"
+  },
+  "prefer-stable": true,
+  "minimum-stability": "dev"
 }
