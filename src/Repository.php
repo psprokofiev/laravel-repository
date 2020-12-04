@@ -12,7 +12,7 @@ use Throwable;
  * Class LaravelRepository
  * @package Psprokofiev\LaravelRepository
  */
-abstract class LaravelRepository
+abstract class Repository
 {
     /** @var string */
     protected $model;

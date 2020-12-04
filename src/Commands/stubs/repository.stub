@@ -3,13 +3,13 @@
 namespace {{ namespace }};
 
 use App\Models\{{ model }};
-use Psprokofiev\LaravelRepository\LaravelRepository;
+use Psprokofiev\LaravelRepository\Repository;
 
 /**
  * Class {{ class }}
  * @package App\Repositories\{{ class }}
  */
-class {{ class }} extends LaravelRepository
+class {{ class }} extends Repository
 {
     /** @var string */
     protected $model = {{ model }}::class;
