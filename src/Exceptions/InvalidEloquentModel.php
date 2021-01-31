@@ -8,7 +8,7 @@ use Exception;
  * Class InvalidModel
  * @package Psprokofiev\LaravelRepository
  */
-class InvalidModel extends Exception
+class InvalidEloquentModel extends Exception
 {
     //
 }

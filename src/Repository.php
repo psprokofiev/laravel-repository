@@ -2,11 +2,11 @@
 
 namespace Psprokofiev\LaravelRepository;
 
+use Illuminate\Database\ConnectionInterface;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Psprokofiev\LaravelRepository\Exceptions\InvalidModel;
-use Psprokofiev\LaravelRepository\Exceptions\UndefinedModel;
-use Throwable;
+use Illuminate\Support\Arr;
+use Psprokofiev\LaravelRepository\Exceptions\InvalidEloquentModel;
 
 /**
  * Class LaravelRepository
@@ -21,18 +21,17 @@ abstract class Repository
     protected $query;
 
     /**
-     * BaseRepository constructor.
+     * Repository constructor.
      *
-     * @throws Throwable
+     * @param  string  $model
+     *
+     * @throws InvalidEloquentModel
      */
-    public function __construct()
+    public function __construct(string $model)
     {
-        if (empty($this->model)) {
-            throw new UndefinedModel();
-        }
-
-        if (get_parent_class($this->model) !== Model::class) {
-            throw new InvalidModel();
+        $this->model = $model;
+        if (! Arr::has(class_parents($this->model), Model::class)) {
+            throw new InvalidEloquentModel;
         }
 
         $this->query = app($this->model);
@@ -44,5 +43,23 @@ abstract class Repository
     public function getTable()
     {
         return $this->query->getTable();
+    }
+
+    /**
+     * @return ConnectionInterface
+     */
+    public function getConnection()
+    {
+        return $this->query->getConnection();
+    }
+
+    /**
+     * @param  int  $id
+     *
+     * @return Model|null
+     */
+    public function getSingle(int $id)
+    {
+        return $this->query->find($id);
     }
 }

@@ -2,17 +2,17 @@
 
 namespace {{ namespace }};
 
-use App\Models\{{ model }};
+use Illuminate\Database\Eloquent\Builder;
 use Psprokofiev\LaravelRepository\Repository;
 
 /**
  * Class {{ class }}
  * @package App\Repositories\{{ class }}
+ *
+ * @property string $model
+ * @property Builder $query
  */
 class {{ class }} extends Repository
 {
-    /** @var string */
-    protected $model = {{ model }}::class;
-
-    //
+    // todo: implement repository methods
 }

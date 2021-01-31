@@ -4,8 +4,6 @@ namespace Psprokofiev\LaravelRepository\Commands;
 
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
-use Illuminate\Support\Str;
-use InvalidArgumentException;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
@@ -19,7 +17,7 @@ class RepositoryMakeCommand extends GeneratorCommand
      *
      * @var string
      */
-    protected $signature = 'make:repository {name=DummyRepository} {--model=Dummy}';
+    protected $signature = 'make:repository {model}';
 
     /**
      * The console command description.
@@ -39,16 +37,6 @@ class RepositoryMakeCommand extends GeneratorCommand
     protected function getArguments()
     {
         return [];
-    }
-
-    /**
-     * @return array
-     */
-    protected function getOptions()
-    {
-        return [
-            ['model', 'm', InputOption::VALUE_OPTIONAL, 'Generate a repository for the given model.'],
-        ];
     }
 
     protected function getStub()
@@ -82,13 +70,21 @@ class RepositoryMakeCommand extends GeneratorCommand
     }
 
     /**
+     * Get the desired class name from the input.
+     *
+     * @return string
+     */
+    protected function getNameInput()
+    {
+        return trim($this->argument('model')) . 'Repository';
+    }
+
+    /**
      * @return array
      */
     protected function buildModelReplacements()
     {
-        $modelClass = $this->parseModel(
-            $this->defineModel()
-        );
+        $modelClass = $this->defineModel();
 
         if (! class_exists($modelClass)) {
             if ($this->confirm("A {$modelClass} model does not exist. Do you want to generate it?", true)) {
@@ -106,25 +102,20 @@ class RepositoryMakeCommand extends GeneratorCommand
      */
     protected function defineModel()
     {
-        if (! empty($this->option('model'))) {
-            return $this->option('model');
-        }
-
-        return Str::replaceLast('Repository', '', $this->argument('name'));
+        return $this->qualifyModel(
+            $this->argument('model')
+        );
     }
 
     /**
-     * @param  string  $model
+     * Get the console command options.
      *
-     * @return string
-     * @throws InvalidArgumentException
+     * @return array
      */
-    protected function parseModel(string $model)
+    protected function getOptions()
     {
-        if (preg_match('([^A-Za-z0-9_/\\\\])', $model)) {
-            throw new InvalidArgumentException('Model name contains invalid characters.');
-        }
-
-        return $this->qualifyModel($model);
+        return [
+            ['model', null, InputOption::VALUE_REQUIRED, 'Model name'],
+        ];
     }
 }
