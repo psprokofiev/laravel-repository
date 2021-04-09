@@ -62,4 +62,12 @@ abstract class Repository
     {
         return $this->query->find($id);
     }
+
+    /**
+     * @return Builder|Model|mixed
+     */
+    public function getQuery()
+    {
+        return $this->query;
+    }
 }
