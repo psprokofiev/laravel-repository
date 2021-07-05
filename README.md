@@ -18,6 +18,20 @@ php artisan make:repository User
 ```
 will create `\App\Repositories\UserRepository` for `\App\Models\User`
 
+### Add repository trait to your model
+```php
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Psprokofiev\LaravelRepository\InteractsWithRepository;
+
+class User extends Model {
+    use InteractsWithRepository;
+  
+  //
+}
+```
+
 ### Single model
 ```php
 \App\Models\User::repository()->getSingle(1);
