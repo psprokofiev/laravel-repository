@@ -28,6 +28,10 @@ trait InteractsWithRepository
      */
     private static function defineClass()
     {
+        if (! empty(static::$repository)) {
+            return static::$repository;
+        }
+
         return sprintf(
             "App\\Repositories\\%sRepository",
             basename(static::class)

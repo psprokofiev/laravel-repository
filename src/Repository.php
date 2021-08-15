@@ -2,9 +2,9 @@
 
 namespace Psprokofiev\LaravelRepository;
 
-use Illuminate\Database\ConnectionInterface;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Arr;
 use Psprokofiev\LaravelRepository\Exceptions\InvalidEloquentModel;
 
@@ -17,9 +17,6 @@ abstract class Repository
     /** @var string */
     protected $model;
 
-    /** @var Builder */
-    protected $query;
-
     /**
      * Repository constructor.
      *
@@ -30,44 +27,42 @@ abstract class Repository
     public function __construct(string $model)
     {
         $this->model = $model;
+
         if (! Arr::has(class_parents($this->model), Model::class)) {
             throw new InvalidEloquentModel;
         }
-
-        $this->query = app($this->model);
     }
 
     /**
-     * @return string
+     * @param  int|string  $id
+     * @param  string  $key
+     * @param  string|array  $columns
+     *
+     * @return Model
+     * @throws ModelNotFoundException
      */
-    public function getTable()
+    public function getSingle($id, string $key = 'id', $columns = ['*'])
     {
-        return $this->query->getTable();
+        return $this->query()->where($key, $id)->firstOrFail($columns);
     }
 
     /**
-     * @return ConnectionInterface
-     */
-    public function getConnection()
-    {
-        return $this->query->getConnection();
-    }
-
-    /**
-     * @param  int  $id
+     * @param  int|string  $id
+     * @param  string  $key
+     * @param  string|array  $columns
      *
      * @return Model|null
      */
-    public function getSingle(int $id)
+    public function findSingle($id, string $key = 'id', $columns = ['*'])
     {
-        return $this->query->find($id);
+        return $this->query()->where($key, $id)->first($columns);
     }
 
     /**
      * @return Builder|Model|mixed
      */
-    public function getQuery()
+    public function query()
     {
-        return $this->query;
+        return $this->model::query();
     }
 }

@@ -5,10 +5,9 @@
  * Class LaravelRepository
  * @package Psprokofiev\LaravelRepository
  * 
- * @method \Illuminate\Database\Eloquent\Model getSingle(int $id)
- * @method \Illuminate\Database\Eloquent\Builder getQuery() 
- * @method string getTable()
- * @method string getConnection()
+ * @method \Illuminate\Database\Eloquent\Model getSingle($id, string $key = 'id', $columns = ['*'])
+ * @method \Illuminate\Database\Eloquent\Model|null findSingle($id, string $key = 'id', $columns = ['*'])
+ * @method \Illuminate\Database\Eloquent\Builder query() 
  */
 ```
 
@@ -27,6 +26,22 @@ use Psprokofiev\LaravelRepository\InteractsWithRepository;
 
 class User extends Model {
     use InteractsWithRepository;
+  
+  //
+}
+```
+
+You can redefine repository class with static variable
+```php
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Psprokofiev\LaravelRepository\InteractsWithRepository;
+
+class User extends Model {
+    use InteractsWithRepository;
+    
+    protected static $repository = \App\Another\Namespace\UserRepository::class;
   
   //
 }
