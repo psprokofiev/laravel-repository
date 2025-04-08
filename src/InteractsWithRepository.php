@@ -1,40 +1,34 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Psprokofiev\LaravelRepository;
 
-use Psprokofiev\LaravelRepository\Exceptions\RepositoryNotFound;
+use Webmozart\Assert\Assert;
 
 /**
  * Trait InteractsWithRepository
- * @package Psprokofiev\LaravelRepository
  */
 trait InteractsWithRepository
 {
-    /**
-     * @return Repository
-     */
-    public static function repository()
+    public static function repository(): Repository
     {
         $class = self::defineClass();
-        if (! class_exists($class)) {
-            throw new RepositoryNotFound($class);
-        }
+
+        Assert::classExists($class);
 
         return new $class(static::class);
     }
 
-    /**
-     * @return string
-     */
-    private static function defineClass()
+    private static function defineClass(): string
     {
-        if (! empty(static::$repository)) {
+        if (!empty(static::$repository)) {
             return static::$repository;
         }
 
-        return sprintf(
-            "App\\Repositories\\%sRepository",
-            basename(static::class)
+        return \sprintf(
+            'App\\Repositories\\%sRepository',
+            basename(static::class),
         );
     }
 }

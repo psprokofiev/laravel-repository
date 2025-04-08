@@ -1,67 +1,48 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Psprokofiev\LaravelRepository;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Support\Arr;
-use Psprokofiev\LaravelRepository\Exceptions\InvalidEloquentModel;
+use Webmozart\Assert\Assert;
 
 /**
  * Class LaravelRepository
- * @package Psprokofiev\LaravelRepository
  */
 abstract class Repository
 {
-    /** @var string */
-    protected $model;
-
     /**
-     * Repository constructor.
-     *
-     * @param  string  $model
-     *
-     * @throws InvalidEloquentModel
+     * @param class-string<Model> $model
      */
-    public function __construct(string $model)
+    public function __construct(protected string $model)
     {
-        $this->model = $model;
-
-        if (! Arr::has(class_parents($this->model), Model::class)) {
-            throw new InvalidEloquentModel;
-        }
+        Assert::inArray(Model::class, class_parents($this->model));
     }
 
     /**
-     * @param  int|string  $id
-     * @param  string  $key
-     * @param  string|array  $columns
+     * @param int|string $id
+     * @param list<string>|string $columns
      *
-     * @return Model
      * @throws ModelNotFoundException
      */
-    public function getSingle($id, string $key = 'id', $columns = ['*'])
+    public function getSingle(mixed $id, string $key = 'id', array|string $columns = ['*']): Model
     {
         return $this->query()->where($key, $id)->firstOrFail($columns);
     }
 
     /**
-     * @param  int|string  $id
-     * @param  string  $key
-     * @param  string|array  $columns
-     *
-     * @return Model|null
+     * @param int|string $id
+     * @param list<string>|string $columns
      */
-    public function findSingle($id, string $key = 'id', $columns = ['*'])
+    public function findSingle(mixed $id, string $key = 'id', array|string $columns = ['*']): ?Model
     {
         return $this->query()->where($key, $id)->first($columns);
     }
 
-    /**
-     * @return Builder|Model|mixed
-     */
-    public function query()
+    public function query(): Builder|Model
     {
         return $this->model::query();
     }

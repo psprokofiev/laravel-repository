@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Psprokofiev\LaravelRepository\Commands;
 
 use Illuminate\Console\GeneratorCommand;
@@ -8,88 +10,64 @@ use Symfony\Component\Console\Input\InputOption;
 
 /**
  * Class MakeRepository
- * @package Psprokofiev\LaravelRepository\Commands
  */
-class RepositoryMakeCommand extends GeneratorCommand
+final class RepositoryMakeCommand extends GeneratorCommand
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
     protected $signature = 'make:repository {model}';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Make new repository';
 
-    /**
-     * @var string
-     */
     protected $type = 'Repository';
 
-    /**
-     * @return array
-     */
-    protected function getArguments()
+    protected function getArguments(): array
     {
         return [];
     }
 
-    protected function getStub()
+    protected function getStub(): string
     {
-        return __DIR__ . '/stubs/repository.stub';
+        return __DIR__.'/stubs/repository.stub';
+    }
+
+    protected function getDefaultNamespace($rootNamespace): string
+    {
+        return "{$rootNamespace}\\Repositories";
     }
 
     /**
-     * @param  string  $rootNamespace
+     * @param mixed $name
      *
-     * @return string
-     */
-    protected function getDefaultNamespace($rootNamespace)
-    {
-        return $rootNamespace . '\Repositories';
-    }
-
-    /**
-     * @param  string  $name
-     *
-     * @return string
      * @throws FileNotFoundException
      */
-    protected function buildClass($name)
+    protected function buildClass($name): string
     {
         $replace = $this->buildModelReplacements();
 
         return str_replace(
-            array_keys($replace), array_values($replace), parent::buildClass($name)
+            array_keys($replace),
+            array_values($replace),
+            parent::buildClass($name),
         );
     }
 
-    /**
-     * Get the desired class name from the input.
-     *
-     * @return string
-     */
-    protected function getNameInput()
+    protected function getNameInput(): string
     {
-        return trim($this->argument('model')) . 'Repository';
+        return \sprintf('%sRepository', trim($this->argument('model')));
     }
 
-    /**
-     * @return array
-     */
-    protected function buildModelReplacements()
+    protected function getOptions(): array
+    {
+        return [
+            ['model', null, InputOption::VALUE_REQUIRED, 'Model name'],
+        ];
+    }
+
+    private function buildModelReplacements(): array
     {
         $modelClass = $this->defineModel();
 
-        if (! class_exists($modelClass)) {
-            if ($this->confirm("A {$modelClass} model does not exist. Do you want to generate it?", true)) {
-                $this->call('make:model', ['name' => $modelClass]);
-            }
+        if (!class_exists($modelClass) && $this->confirm("A {$modelClass} model does not exist. Do you want to generate it?", true)) {
+            $this->call('make:model', ['name' => $modelClass]);
         }
 
         return [
@@ -97,25 +75,10 @@ class RepositoryMakeCommand extends GeneratorCommand
         ];
     }
 
-    /**
-     * @return string
-     */
-    protected function defineModel()
+    private function defineModel(): string
     {
         return $this->qualifyModel(
-            $this->argument('model')
+            $this->argument('model'),
         );
-    }
-
-    /**
-     * Get the console command options.
-     *
-     * @return array
-     */
-    protected function getOptions()
-    {
-        return [
-            ['model', null, InputOption::VALUE_REQUIRED, 'Model name'],
-        ];
     }
 }

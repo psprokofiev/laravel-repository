@@ -1,0 +1,9 @@
+*.php                   diff=php
+
+/.github                        export-ignore
+.editorconfig                   export-ignore
+.gitattributes                  export-ignore
+.gitignore                      export-ignore
+/php-cs-fixer.php               export-ignore
+/rector.config.php              export-ignore
+/composer.lock                  export-ignore
