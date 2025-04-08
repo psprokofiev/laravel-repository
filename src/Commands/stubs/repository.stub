@@ -12,7 +12,7 @@ use Psprokofiev\LaravelRepository\Repository;
  * @property string $model
  * @property Builder $query
  */
-class {{ class }} extends Repository
+final readonly class {{ class }} extends Repository
 {
     // todo: implement repository methods
 }
